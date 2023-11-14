@@ -54,9 +54,6 @@ class GamePlayFragment : Fragment() {
             }
 
         }))
-        binding.user.animate()
-            .translationXBy(100f)
-            .start();
     }
 
     private fun playAnimation() {
