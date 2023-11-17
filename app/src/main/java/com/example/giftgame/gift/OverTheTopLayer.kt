@@ -24,6 +24,7 @@ class OverTheTopLayer {
     private var mScalingFactor = 1.0f
     private var mDrawLocation = intArrayOf(0, 0)
     private var mBitmap: Bitmap? = null
+    private var drawnImageView : ImageView? = null
 
     /**
      * To create a layer on the top of activity
@@ -163,8 +164,8 @@ class OverTheTopLayer {
      */
     fun applyAnimation(animation: Animation?) {
         if (mCreatedOttLayer != null) {
-            val drawnImageView = mCreatedOttLayer!!.getChildAt(0) as ImageView
-            drawnImageView.startAnimation(animation)
+            drawnImageView = mCreatedOttLayer!!.getChildAt(0) as ImageView
+            drawnImageView?.startAnimation(animation)
         }
     }
 }

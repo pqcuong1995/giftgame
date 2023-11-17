@@ -1,6 +1,7 @@
 package com.example.giftgame.gift
 
 import android.app.Activity
+import com.example.giftgame.data.Column
 import java.util.Random
 
 class DirectionGenerator {
@@ -11,16 +12,16 @@ class DirectionGenerator {
      * @param direction - on among LEFT,RIGHT,TOP,BOTTOM,RANDOM
      * @return a pixel point {x,y} in the given direction.
      */
-    fun getPointsInDirection(activity: Activity, direction: Direction?, number: Int): IntArray {
+    fun getPointsInDirection(activity: Activity, direction: Direction?, column: Column): IntArray {
         return when (direction) {
             Direction.LEFT -> getRandomLeft(activity)
             Direction.RIGHT -> getRandomRight(activity)
-            Direction.BOTTOM -> getRandomBottom(activity, number)
-            Direction.TOP -> getRandomTop(activity, number)
+            Direction.BOTTOM -> getRandomBottom(activity, column)
+            Direction.TOP -> getRandomTop(activity, column)
             else -> {
                 val allDirections = arrayOf(Direction.LEFT, Direction.TOP, Direction.BOTTOM, Direction.RIGHT)
                 val index = Random().nextInt(allDirections.size)
-                getPointsInDirection(activity, allDirections[index], number)
+                getPointsInDirection(activity, allDirections[index], column)
             }
         }
     }
@@ -45,32 +46,30 @@ class DirectionGenerator {
      * @param activity - activity from where you are referring the random value.
      * @return a pixel point {x,y}.
      */
-    private fun getRandomTop(activity: Activity, number: Int): IntArray {
+    private fun getRandomTop(activity: Activity, column: Column): IntArray {
         val width = activity.resources.displayMetrics.widthPixels
         val height = activity.resources.displayMetrics.heightPixels
         var a = 0
-        when (number) {
-            1 -> {
+        when (column) {
+            Column.FIRST -> {
                 a = 10
             }
 
-            2 -> {
+            Column.SECOND -> {
                 a = 30
             }
 
-            3 -> {
+            Column.THIRD -> {
                 a = 50
             }
 
-            4 -> {
+            Column.FOURTH -> {
                 a = 70
             }
 
-            5 -> {
+            Column.FIFTH -> {
                 a = 90
             }
-
-            else -> {}
         }
         val x = width * a / 100
         val y = 0
@@ -97,33 +96,31 @@ class DirectionGenerator {
      * @param activity - activity from where you are referring the random value.
      * @return a pixel point {x,y}.
      */
-    private fun getRandomBottom(activity: Activity, number: Int): IntArray {
+    private fun getRandomBottom(activity: Activity, column: Column): IntArray {
         val width = activity.resources.displayMetrics.widthPixels
         val height = activity.resources.displayMetrics.heightPixels
 
         var a = 0
-        when (number) {
-            1 -> {
+        when (column) {
+            Column.FIRST -> {
                 a = 10
             }
 
-            2 -> {
+            Column.SECOND -> {
                 a = 30
             }
 
-            3 -> {
+            Column.THIRD -> {
                 a = 50
             }
 
-            4 -> {
+            Column.FOURTH -> {
                 a = 70
             }
 
-            5 -> {
+            Column.FIFTH -> {
                 a = 90
             }
-
-            else -> {}
         }
         val x = width * a / 100
         val y = height

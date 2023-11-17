@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
 import android.view.animation.TranslateAnimation
+import com.example.giftgame.data.Column
 
 
 class ZeroGravityAnimation {
@@ -21,6 +22,7 @@ class ZeroGravityAnimation {
     private var mImageResId = 0
     private var mScalingFactor = 1.5f
     private var mAnimationListener: AnimationListener? = null
+    private var layer: OverTheTopLayer? = null
 
     /**
      * Sets the orignal direction. The animation will originate from the given direction.
@@ -99,14 +101,14 @@ class ZeroGravityAnimation {
      */
     @SuppressLint("ClickableViewAccessibility", "ObjectAnimatorBinding")
     @JvmOverloads
-    fun play(activity: Activity, ottParent: ViewGroup? = null, number: Int, positionGiftCallBack: PositionGiftCallBack) {
+    fun play(activity: Activity, ottParent: ViewGroup? = null, column: Column, positionGiftCallBack: PositionGiftCallBack) {
         val generator = DirectionGenerator()
         if (mCount > 0) {
             for (i in 0 until mCount) {
                 val origin = if (mOriginationDirection == Direction.RANDOM) generator.randomDirection else mOriginationDirection
                 val destination = if (mDestinationDirection == Direction.RANDOM) generator.getRandomDirection(origin) else mDestinationDirection
-                val startingPoints = generator.getPointsInDirection(activity, origin, number)
-                val endPoints = generator.getPointsInDirection(activity, destination, number)
+                val startingPoints = generator.getPointsInDirection(activity, origin, column)
+                val endPoints = generator.getPointsInDirection(activity, destination, column)
                 val bitmap = BitmapFactory.decodeResource(activity.resources, mImageResId)
                 val scaledBitmap = Bitmap.createScaledBitmap(bitmap, (bitmap.width * mScalingFactor).toInt(), (bitmap.height * mScalingFactor).toInt(), false)
                 when (origin) {
@@ -123,16 +125,18 @@ class ZeroGravityAnimation {
                     Direction.BOTTOM -> endPoints[1] += scaledBitmap.height
                     else -> {}
                 }
-                val layer = OverTheTopLayer()
-                val ottLayout = layer.with(activity)
-                    .scale(mScalingFactor)
-                    .attachTo(ottParent)
-                    .setBitmap(scaledBitmap, startingPoints)
-                    .create()
+                layer = OverTheTopLayer()
+                layer?.let {
+                    it.with(activity)
+                        .scale(mScalingFactor)
+                        .attachTo(ottParent)
+                        .setBitmap(scaledBitmap, startingPoints)
+                        .create()
+                }
+
                 val deltaX = endPoints[0] - startingPoints[0]
                 val deltaY = endPoints[1] - startingPoints[1]
-                Log.d("Hung1997", "onTouch ACTION_MOVE11: " + endPoints[0] + " " + startingPoints[0])
-                Log.d("Hung1997", "onTouch ACTION_MOVE22: " + endPoints[1] + " " + startingPoints[1])
+
                 var duration = mDuration
                 if (duration == RANDOM_DURATION) {
                     duration = RandomUtil.generateRandomBetween(4000, 12000)
@@ -141,7 +145,6 @@ class ZeroGravityAnimation {
                 animation.duration = duration.toLong()
                 animation.setAnimationListener(object : AnimationListener {
                     override fun onAnimationStart(animation: Animation) {
-                        Log.d("Hung1997", "onAnimationStart " + ottLayout?.x + " " + ottLayout?.y)
                         if (i == 0) {
                             if (mAnimationListener != null) {
                                 mAnimationListener!!.onAnimationStart(animation)
@@ -150,7 +153,7 @@ class ZeroGravityAnimation {
                     }
 
                     override fun onAnimationEnd(animation: Animation) {
-                        layer.destroy()
+                        layer?.destroy()
                         if (i == mCount - 1) {
                             if (mAnimationListener != null) {
                                 mAnimationListener!!.onAnimationEnd(animation)
@@ -162,7 +165,7 @@ class ZeroGravityAnimation {
 
                     }
                 })
-                layer.applyAnimation(animation)
+                layer?.applyAnimation(animation)
 
                 var imageXPosition = 0f
                 var imageYPosition = 0f
@@ -183,6 +186,11 @@ class ZeroGravityAnimation {
         } else {
             Log.e(ZeroGravityAnimation::class.java.simpleName, "Count was not provided, animation was not started")
         }
+    }
+
+    fun hideAnimation() {
+        Log.d("Hung1997", "Could not destroy the layer as the layer was never created." + layer)
+        layer?.destroy()
     }
 
     companion object {

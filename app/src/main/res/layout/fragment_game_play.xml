@@ -6,17 +6,6 @@
     android:layout_height="match_parent"
     android:background="@drawable/ic_background_red">
 
-    <ImageView
-        android:id="@+id/imgBackground"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:scaleType="centerCrop"
-        android:src="@drawable/ic_background_game_bottom"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="1080:360"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <TextView
         android:textColor="@color/white"
         android:id="@+id/txtPoint"
