@@ -4,6 +4,5 @@ enum class Column {
     FIRST,
     SECOND,
     THIRD,
-    FOURTH,
-    FIFTH
+    FOURTH
 }

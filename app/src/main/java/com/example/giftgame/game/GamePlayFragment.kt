@@ -71,7 +71,6 @@ class GamePlayFragment : Fragment() {
             handleRandomGift(Column.SECOND)
             handleRandomGift(Column.THIRD)
             handleRandomGift(Column.FOURTH)
-            handleRandomGift(Column.FIFTH)
             handler.postDelayed({
                 stopMusic()
             }, 1300)

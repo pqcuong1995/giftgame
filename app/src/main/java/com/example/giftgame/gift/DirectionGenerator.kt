@@ -52,23 +52,19 @@ class DirectionGenerator {
         var a = 0
         when (column) {
             Column.FIRST -> {
-                a = 10
+                a = 13
             }
 
             Column.SECOND -> {
-                a = 30
+                a = 38
             }
 
             Column.THIRD -> {
-                a = 50
+                a = 63
             }
 
             Column.FOURTH -> {
-                a = 70
-            }
-
-            Column.FIFTH -> {
-                a = 90
+                a = 88
             }
         }
         val x = width * a / 100
@@ -116,10 +112,6 @@ class DirectionGenerator {
 
             Column.FOURTH -> {
                 a = 70
-            }
-
-            Column.FIFTH -> {
-                a = 90
             }
         }
         val x = width * a / 100
