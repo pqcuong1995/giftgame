@@ -20,7 +20,7 @@ class ZeroGravityAnimation {
     private var mDuration = RANDOM_DURATION
     private var mCount = 1
     private var mImageResId = 0
-    private var mScalingFactor = 1.5f
+    private var mScalingFactor = 1f
     private var mAnimationListener: AnimationListener? = null
     private var layer: OverTheTopLayer? = null
 

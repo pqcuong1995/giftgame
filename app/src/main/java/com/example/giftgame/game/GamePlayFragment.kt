@@ -37,7 +37,11 @@ class GamePlayFragment : Fragment() {
     private var isStartGame = false
     private var point = 0
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         binding = FragmentGamePlayBinding.inflate(layoutInflater)
         return binding.root
     }
@@ -50,17 +54,25 @@ class GamePlayFragment : Fragment() {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setUpDragUser() {
-        binding.user.setOnTouchListener(DragExperimentTouchListener(0f, requireActivity().resources.displayMetrics.widthPixels.toFloat() - convertDpToPixel(40f, requireActivity()), object : PositionUserCallback {
-            override fun onChangePosition(imageXPosition: Int, imageYPosition: Int) {
-                currentXOfUser = imageXPosition
-                currentYOfUser = imageYPosition
-                if (!isStartGame) {
-                    playAnimation()
-                    isStartGame = true
-                }
-            }
+        binding.user.setOnTouchListener(
+            DragExperimentTouchListener(
+                0f,
+                requireActivity().resources.displayMetrics.widthPixels.toFloat() - convertDpToPixel(
+                    40f,
+                    requireActivity()
+                ),
+                object : PositionUserCallback {
+                    override fun onChangePosition(imageXPosition: Int, imageYPosition: Int) {
+                        currentXOfUser = imageXPosition
+                        currentYOfUser = imageYPosition
+                        if (!isStartGame) {
+                            playAnimation()
+                            isStartGame = true
+                        }
+                    }
 
-        }))
+                })
+        )
     }
 
     private fun playAnimation() {
@@ -81,32 +93,24 @@ class GamePlayFragment : Fragment() {
         val random = Random
         var item: Item? = null
         when (random.nextInt(100)) {
-            in 0..10 -> {
+            in 0..40 -> {
                 item = Item.Gift(R.drawable.ic_gift_0_point, 0)
             }
 
-            in 11..20 -> {
-                item = Item.Gift(R.drawable.ic_gift_1_point, 1)
-            }
-
-            in 21..40 -> {
+            in 41..60 -> {
                 item = Item.Gift(R.drawable.ic_gift_5_point, 5)
             }
 
-            in 41..60 -> {
+            in 61..70 -> {
                 item = Item.Gift(R.drawable.ic_gift_10_point, 10)
             }
 
-            in 61..70 -> {
+            in 71..80 -> {
                 item = Item.Gift(R.drawable.ic_gift_15_point, 15)
             }
 
-            in 71..85 -> {
-                item = Item.Gift(R.drawable.ic_boom, 10)
-            }
-
-            in 86..90 -> {
-                item = Item.Gift(R.drawable.ic_gift_50_point, 50)
+            in 81..90 -> {
+                item = Item.Gift(R.drawable.ic_gift_30_point, 30)
             }
 
             in 91..100 -> {
@@ -125,55 +129,81 @@ class GamePlayFragment : Fragment() {
     }
 
     private fun flyGift(item: Item, column: Column) {
-        var isCollideSuccess = false
-        val animation = ZeroGravityAnimation()
-        animation.setCount(1)
-        animation.setScalingFactor(1f)
-        animation.setOriginationDirection(Direction.TOP)
-        animation.setDestinationDirection(Direction.BOTTOM)
-        animation.setImage(item.resource)
-        animation.setAnimationListener(object : AnimationListener {
-            override fun onAnimationStart(animation: Animation) {}
-            override fun onAnimationEnd(animation: Animation) {}
-            override fun onAnimationRepeat(animation: Animation) {}
-        }
-        )
-        animation.play(requireActivity(), binding.container, column, object : PositionGiftCallBack {
-            override fun onChangePosition(imageXPosition: Int, imageYPosition: Int) {
-                val cornerBottomLeftOfGift = imageYPosition + convertDpToPixel(48f, requireActivity())
-                val cornerTopLeftOfUser = currentXOfUser
-                val cornerTopRightOfUser = currentXOfUser + convertDpToPixel(48f, requireActivity())
-
-                val isDetectCollideY = (cornerBottomLeftOfGift > currentYOfUser) && (cornerBottomLeftOfGift < currentYOfUser + convertDpToPixel(48f, requireActivity()))
-                val isDetectCollideX = (cornerTopLeftOfUser > imageXPosition) && cornerTopLeftOfUser < imageXPosition + convertDpToPixel(48f, requireActivity())
-                val isDetectCollideX1 = (cornerTopRightOfUser > imageXPosition) && cornerTopRightOfUser < imageXPosition + convertDpToPixel(48f, requireActivity())
-
-                if (isStartGame && !isCollideSuccess) {
-                    if (isDetectCollideY && (isDetectCollideX || isDetectCollideX1)) {
-                        animation.hideAnimation()
-                        when (item) {
-                            is Item.Gift -> {
-                                point += item.point
-                            }
-
-                            is Item.BOOM -> {
-                                point -= item.point
-                            }
-
-                            is Item.FlashTime -> {
-
-                            }
-
-                            is Item.MultiGift -> {
-
-                            }
-                        }
-                        binding.txtPoint.text = point.toString()
-                        isCollideSuccess = true
-                    }
-                }
+        try {
+            var isCollideSuccess = false
+            val animation = ZeroGravityAnimation()
+            animation.setCount(1)
+            animation.setScalingFactor(1f)
+            animation.setOriginationDirection(Direction.TOP)
+            animation.setDestinationDirection(Direction.BOTTOM)
+            animation.setImage(item.resource)
+            animation.setAnimationListener(object : AnimationListener {
+                override fun onAnimationStart(animation: Animation) {}
+                override fun onAnimationEnd(animation: Animation) {}
+                override fun onAnimationRepeat(animation: Animation) {}
             }
-        })
+            )
+            animation.play(
+                requireActivity(),
+                binding.container,
+                column,
+                object : PositionGiftCallBack {
+                    override fun onChangePosition(imageXPosition: Int, imageYPosition: Int) {
+                        try {
+                            val cornerBottomLeftOfGift =
+                                imageYPosition + convertDpToPixel(48f, requireActivity())
+                            val cornerTopLeftOfUser = currentXOfUser
+                            val cornerTopRightOfUser =
+                                currentXOfUser + convertDpToPixel(48f, requireActivity())
+
+                            val isDetectCollideY =
+                                (cornerBottomLeftOfGift > currentYOfUser) && (cornerBottomLeftOfGift < currentYOfUser + convertDpToPixel(
+                                    48f,
+                                    requireActivity()
+                                ))
+                            val isDetectCollideX =
+                                (cornerTopLeftOfUser > imageXPosition) && cornerTopLeftOfUser < imageXPosition + convertDpToPixel(
+                                    48f,
+                                    requireActivity()
+                                )
+                            val isDetectCollideX1 =
+                                (cornerTopRightOfUser > imageXPosition) && cornerTopRightOfUser < imageXPosition + convertDpToPixel(
+                                    48f,
+                                    requireActivity()
+                                )
+
+                            if (isStartGame && !isCollideSuccess) {
+                                if (isDetectCollideY && (isDetectCollideX || isDetectCollideX1)) {
+                                    animation.hideAnimation()
+                                    when (item) {
+                                        is Item.Gift -> {
+                                            point += item.point
+                                        }
+
+                                        is Item.BOOM -> {
+                                            point -= item.point
+                                        }
+
+                                        is Item.FlashTime -> {
+
+                                        }
+
+                                        is Item.MultiGift -> {
+
+                                        }
+                                    }
+                                    binding.txtPoint.text = point.toString()
+                                    isCollideSuccess = true
+                                }
+                            }
+                        } catch (e: java.lang.Exception) {
+                            e.printStackTrace()
+                        }
+                    }
+                })
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
     private fun convertDpToPixel(dp: Float, context: Context): Float {

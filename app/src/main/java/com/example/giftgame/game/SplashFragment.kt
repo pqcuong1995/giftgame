@@ -19,7 +19,7 @@ class SplashFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.btnStart.setOnClickListener {
-            (activity as MainActivity).openGamePlay()
+            (activity as MainActivity).openRulesGame()
         }
     }
 }
