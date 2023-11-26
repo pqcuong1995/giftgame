@@ -23,8 +23,6 @@ import com.example.giftgame.databinding.FragmentGamePlayBinding
 import com.example.giftgame.gift.Direction
 import com.example.giftgame.gift.PositionGiftCallBack
 import com.example.giftgame.gift.ZeroGravityAnimation
-import com.example.giftgame.user.DragExperimentTouchListener
-import com.example.giftgame.user.PositionUserCallback
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -60,6 +58,7 @@ class GamePlayFragment : Fragment(), SensorEventListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         context?.let {
+            mHandler = Handler(it.mainLooper)
             this.mSensorManager = it.getSystemService(Context.SENSOR_SERVICE) as SensorManager
             accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
             magnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
@@ -254,6 +253,7 @@ class GamePlayFragment : Fragment(), SensorEventListener {
     override fun onPause() {
         super.onPause()
         mSensorManager.unregisterListener(this)
+        mHandler?.removeCallbacks(userMove)
     }
 
     override fun onSensorChanged(event: SensorEvent) {
@@ -269,7 +269,17 @@ class GamePlayFragment : Fragment(), SensorEventListener {
                 val azimut = orientation[0] // orientation contains: azimut, pitch and roll
                 val pitch = orientation[1] // orientation contains: azimut, pitch and roll
                 val roll = orientation[2] // orientation contains: azimut, pitch and roll
-                onMoveUser(azimut, pitch, roll)
+                if (roll < 0 && azimut < 0 && pitch < 0) {
+                    isXCanMinus = true
+                    isXCanPlus = false
+                }
+                if (roll > 0 && azimut < 0 && pitch < 0) {
+                    isXCanMinus = false
+                    isXCanPlus = true
+                }
+                if (!isRunning) {
+                    userMove.run()
+                }
             }
         }
     }
@@ -278,27 +288,36 @@ class GamePlayFragment : Fragment(), SensorEventListener {
 
     }
 
-    private fun onMoveUser(azimut: Float, pitch: Float, roll: Float) {
+    private var mHandler: Handler? = null
+    private val mInterval = 15
+    var isXCanPlus = false
+    var isXCanMinus = false
+    var isRunning = false
+    private var userMove: Runnable = object : Runnable {
+        override fun run() {
+            isRunning = true
+            try {
+                onMoveUser()
+            } finally {
+                mHandler!!.postDelayed(this, mInterval.toLong())
+            }
+        }
+    }
+
+    private fun onMoveUser() {
         var userX = binding.user.x
         val userY = binding.user.y
-        var isXCanPlus = true
-        var isXCanMinus = true
         if (binding.user.x >= binding.rootView.width - binding.user.width + 10) {
             isXCanPlus = false
         }
         if (binding.user.x <= binding.rootView.x + 10) {
             isXCanMinus = false
         }
-
-        if (roll < 0 && azimut < 0 && pitch < 0) {
-            if (isXCanMinus) {
-                userX -= speed
-            }
+        if (isXCanPlus) {
+            userX += speed
         }
-        if (roll > 0 && azimut < 0 && pitch < 0) {
-            if (isXCanPlus) {
-                userX += speed
-            }
+        if (isXCanMinus) {
+            userX -= speed
         }
         currentXOfUser = userX.toInt()
         currentYOfUser = userY.toInt()
