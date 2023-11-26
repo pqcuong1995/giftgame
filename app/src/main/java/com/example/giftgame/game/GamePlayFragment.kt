@@ -2,6 +2,10 @@ package com.example.giftgame.game
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
@@ -29,14 +33,20 @@ import kotlinx.coroutines.withContext
 import kotlin.random.Random
 
 
-class GamePlayFragment : Fragment() {
+class GamePlayFragment : Fragment(), SensorEventListener {
     private lateinit var binding: FragmentGamePlayBinding
     private var mPlayer: MediaPlayer? = null
     private var currentXOfUser = 0
     private var currentYOfUser = 0
     private var isStartGame = false
     private var point = 0
+    private lateinit var mSensorManager: SensorManager
+    private var accelerometer: Sensor? = null
+    private var magnetometer: Sensor? = null
+    private var speed = 30f
 
+    private var mGravity: FloatArray? = null
+    private var mGeomagnetic: FloatArray? = null
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -49,30 +59,39 @@ class GamePlayFragment : Fragment() {
     @SuppressLint("ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        context?.let {
+            this.mSensorManager = it.getSystemService(Context.SENSOR_SERVICE) as SensorManager
+            accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
+            magnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
+        }
         setUpDragUser()
+        if (!isStartGame) {
+            playAnimation()
+            isStartGame = true
+        }
     }
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setUpDragUser() {
-        binding.user.setOnTouchListener(
-            DragExperimentTouchListener(
-                0f,
-                requireActivity().resources.displayMetrics.widthPixels.toFloat() - convertDpToPixel(
-                    40f,
-                    requireActivity()
-                ),
-                object : PositionUserCallback {
-                    override fun onChangePosition(imageXPosition: Int, imageYPosition: Int) {
-                        currentXOfUser = imageXPosition
-                        currentYOfUser = imageYPosition
-                        if (!isStartGame) {
-                            playAnimation()
-                            isStartGame = true
-                        }
-                    }
-
-                })
-        )
+//        binding.user.setOnTouchListener(
+//            DragExperimentTouchListener(
+//                0f,
+//                requireActivity().resources.displayMetrics.widthPixels.toFloat() - convertDpToPixel(
+//                    40f,
+//                    requireActivity()
+//                ),
+//                object : PositionUserCallback {
+//                    override fun onChangePosition(imageXPosition: Int, imageYPosition: Int) {
+//                        currentXOfUser = imageXPosition
+//                        currentYOfUser = imageYPosition
+//                        if (!isStartGame) {
+//                            playAnimation()
+//                            isStartGame = true
+//                        }
+//                    }
+//
+//                })
+//        )
     }
 
     private fun playAnimation() {
@@ -224,5 +243,68 @@ class GamePlayFragment : Fragment() {
         if (mPlayer != null) {
             mPlayer?.pause()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI)
+        mSensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_UI)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mSensorManager.unregisterListener(this)
+    }
+
+    override fun onSensorChanged(event: SensorEvent) {
+        if (event.sensor.type == Sensor.TYPE_ACCELEROMETER) mGravity = event.values
+        if (event.sensor.type == Sensor.TYPE_MAGNETIC_FIELD) mGeomagnetic = event.values
+        if (mGravity != null && mGeomagnetic != null) {
+            val R = FloatArray(9)
+            val I = FloatArray(9)
+            val success = SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic)
+            if (success) {
+                val orientation = FloatArray(3)
+                SensorManager.getOrientation(R, orientation)
+                val azimut = orientation[0] // orientation contains: azimut, pitch and roll
+                val pitch = orientation[1] // orientation contains: azimut, pitch and roll
+                val roll = orientation[2] // orientation contains: azimut, pitch and roll
+                onMoveUser(azimut, pitch, roll)
+            }
+        }
+    }
+
+    override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
+
+    }
+
+    private fun onMoveUser(azimut: Float, pitch: Float, roll: Float) {
+        var userX = binding.user.x
+        val userY = binding.user.y
+        var isXCanPlus = true
+        var isXCanMinus = true
+        if (binding.user.x >= binding.rootView.width - binding.user.width + 10) {
+            isXCanPlus = false
+        }
+        if (binding.user.x <= binding.rootView.x + 10) {
+            isXCanMinus = false
+        }
+
+        if (roll < 0 && azimut < 0 && pitch < 0) {
+            if (isXCanMinus) {
+                userX -= speed
+            }
+        }
+        if (roll > 0 && azimut < 0 && pitch < 0) {
+            if (isXCanPlus) {
+                userX += speed
+            }
+        }
+        currentXOfUser = userX.toInt()
+        currentYOfUser = userY.toInt()
+        val anime = binding.user.animate()
+        anime.x(userX).y(userY)
+        anime.duration = 0
+        anime.start()
     }
 }
