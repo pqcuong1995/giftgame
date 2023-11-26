@@ -94,7 +94,7 @@ class GamePlayFragment : Fragment() {
         var item: Item? = null
         when (random.nextInt(100)) {
             in 0..25 -> {
-                item = Item.BOOM(R.drawable.ic_boom, 5)
+                item = Item.BOOM(R.drawable.ic_boom, 15)
             }
 
             in 26..40 -> {

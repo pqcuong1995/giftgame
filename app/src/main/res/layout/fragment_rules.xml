@@ -67,7 +67,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:fontFamily="cursive"
-                android:text="- 5 Point"
+                android:text="- 15 Point"
                 android:textColor="#fcf9b5"
                 android:textSize="20sp" />
         </LinearLayout>
