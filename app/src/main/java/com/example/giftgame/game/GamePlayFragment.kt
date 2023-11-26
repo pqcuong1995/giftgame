@@ -93,7 +93,11 @@ class GamePlayFragment : Fragment() {
         val random = Random
         var item: Item? = null
         when (random.nextInt(100)) {
-            in 0..40 -> {
+            in 0..25 -> {
+                item = Item.BOOM(R.drawable.ic_boom, 5)
+            }
+
+            in 26..40 -> {
                 item = Item.Gift(R.drawable.ic_gift_0_point, 0)
             }
 
