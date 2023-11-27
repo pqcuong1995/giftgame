@@ -8,6 +8,7 @@ import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.media.MediaPlayer
 import android.os.Bundle
+import android.os.CountDownTimer
 import android.os.Handler
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
@@ -16,6 +17,7 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
 import androidx.fragment.app.Fragment
+import com.example.giftgame.MainActivity
 import com.example.giftgame.R
 import com.example.giftgame.data.Column
 import com.example.giftgame.data.Item
@@ -42,6 +44,7 @@ class GamePlayFragment : Fragment(), SensorEventListener {
     private var accelerometer: Sensor? = null
     private var magnetometer: Sensor? = null
     private var speed = 30f
+    private var countDown = 30L
 
     private var mGravity: FloatArray? = null
     private var mGeomagnetic: FloatArray? = null
@@ -63,34 +66,25 @@ class GamePlayFragment : Fragment(), SensorEventListener {
             accelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
             magnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD)
         }
-        setUpDragUser()
         if (!isStartGame) {
             playAnimation()
             isStartGame = true
-        }
-    }
+            object : CountDownTimer(10000, 1000) {
+                override fun onTick(millisUntilFinished: Long) {
+                    binding.timer.text = (millisUntilFinished / 1000).toString()
+                    countDown = millisUntilFinished / 1000
+                }
 
-    @SuppressLint("ClickableViewAccessibility")
-    private fun setUpDragUser() {
-//        binding.user.setOnTouchListener(
-//            DragExperimentTouchListener(
-//                0f,
-//                requireActivity().resources.displayMetrics.widthPixels.toFloat() - convertDpToPixel(
-//                    40f,
-//                    requireActivity()
-//                ),
-//                object : PositionUserCallback {
-//                    override fun onChangePosition(imageXPosition: Int, imageYPosition: Int) {
-//                        currentXOfUser = imageXPosition
-//                        currentYOfUser = imageYPosition
-//                        if (!isStartGame) {
-//                            playAnimation()
-//                            isStartGame = true
-//                        }
-//                    }
-//
-//                })
-//        )
+                override fun onFinish() {
+                   activity?.let {
+                       Handler(it.mainLooper).postDelayed({
+                           mSensorManager.unregisterListener(this@GamePlayFragment)
+                           mHandler?.removeCallbacks(userMove)
+                       }, 7000)
+                   }
+                }
+            }.start()
+        }
     }
 
     private fun playAnimation() {
@@ -142,11 +136,20 @@ class GamePlayFragment : Fragment(), SensorEventListener {
         item?.let {
             flyGift(it, column)
         }
+
         CoroutineScope(Dispatchers.Main).launch {
             withContext(Dispatchers.IO) {
                 delay(4000)
             }
-            handleRandomGift(column)
+            if (countDown != 0L){
+                handleRandomGift(column)
+            }else{
+                activity?.let {
+                    Handler(it.mainLooper).postDelayed({
+                        (it as MainActivity).openOpenGiftFragment(point = point)
+                    }, 7000)
+                }
+            }
         }
     }
 
