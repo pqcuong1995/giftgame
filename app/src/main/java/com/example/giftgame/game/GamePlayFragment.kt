@@ -269,14 +269,15 @@ class GamePlayFragment : Fragment(), SensorEventListener {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
+        super.onStart()
         mSensorManager.registerListener(this, accelerometer, SensorManager.SENSOR_DELAY_UI)
         mSensorManager.registerListener(this, magnetometer, SensorManager.SENSOR_DELAY_UI)
     }
 
-    override fun onPause() {
-        super.onPause()
+
+    override fun onDestroy() {
+        super.onDestroy()
         mSensorManager.unregisterListener(this)
         mHandler?.removeCallbacks(userMove)
     }
@@ -291,17 +292,17 @@ class GamePlayFragment : Fragment(), SensorEventListener {
             if (success) {
                 val orientation = FloatArray(3)
                 SensorManager.getOrientation(R, orientation)
-                val azimut = orientation[0] // orientation contains: azimut, pitch and roll
-                val pitch = orientation[1] // orientation contains: azimut, pitch and roll
-                val roll = orientation[2] // orientation contains: azimut, pitch and roll
-                if (roll < 0 && azimut < 0 && pitch < 0) {
+                val azimut = orientation[0]
+                val pitch = orientation[1]
+                val roll = orientation[2]
+                if ((roll < 0 && azimut < 0 && pitch < 0) || (roll < 0 && azimut > 0 && pitch < 0)) {
                     isXCanMinus = true
                     isXCanPlus = false
-                }
-                if (roll > 0 && azimut < 0 && pitch < 0) {
+                } else {
                     isXCanMinus = false
                     isXCanPlus = true
                 }
+
                 if (!isRunning) {
                     userMove.run()
                 }
@@ -309,9 +310,7 @@ class GamePlayFragment : Fragment(), SensorEventListener {
         }
     }
 
-    override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
-
-    }
+    override fun onAccuracyChanged(p0: Sensor?, p1: Int) {}
 
     private var mHandler: Handler? = null
     private val mInterval = 15
