@@ -8,6 +8,4 @@ sealed class Item {
     data class BOOM(override var resource: Int, var point: Int) : Item()
 
     data class FlashTime(override var resource: Int) : Item()
-
-    data class MultiGift(override var resource: Int) : Item()
 }

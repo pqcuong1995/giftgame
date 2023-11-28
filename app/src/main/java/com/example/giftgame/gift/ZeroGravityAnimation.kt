@@ -101,16 +101,32 @@ class ZeroGravityAnimation {
      */
     @SuppressLint("ClickableViewAccessibility", "ObjectAnimatorBinding")
     @JvmOverloads
-    fun play(activity: Activity, ottParent: ViewGroup? = null, column: Column, positionGiftCallBack: PositionGiftCallBack) {
+    fun play(
+        timeMin: Int,
+        timeMax: Int,
+        activity: Activity,
+        ottParent: ViewGroup? = null,
+        column: Column,
+        positionGiftCallBack: PositionGiftCallBack
+    ) {
         val generator = DirectionGenerator()
         if (mCount > 0) {
             for (i in 0 until mCount) {
-                val origin = if (mOriginationDirection == Direction.RANDOM) generator.randomDirection else mOriginationDirection
-                val destination = if (mDestinationDirection == Direction.RANDOM) generator.getRandomDirection(origin) else mDestinationDirection
+                val origin =
+                    if (mOriginationDirection == Direction.RANDOM) generator.randomDirection else mOriginationDirection
+                val destination =
+                    if (mDestinationDirection == Direction.RANDOM) generator.getRandomDirection(
+                        origin
+                    ) else mDestinationDirection
                 val startingPoints = generator.getPointsInDirection(activity, origin, column)
                 val endPoints = generator.getPointsInDirection(activity, destination, column)
                 val bitmap = BitmapFactory.decodeResource(activity.resources, mImageResId)
-                val scaledBitmap = Bitmap.createScaledBitmap(bitmap, (bitmap.width * mScalingFactor).toInt(), (bitmap.height * mScalingFactor).toInt(), false)
+                val scaledBitmap = Bitmap.createScaledBitmap(
+                    bitmap,
+                    (bitmap.width * mScalingFactor).toInt(),
+                    (bitmap.height * mScalingFactor).toInt(),
+                    false
+                )
                 when (origin) {
                     Direction.LEFT -> startingPoints[0] -= scaledBitmap.width
                     Direction.RIGHT -> startingPoints[0] += scaledBitmap.width
@@ -139,7 +155,7 @@ class ZeroGravityAnimation {
 
                 var duration = mDuration
                 if (duration == RANDOM_DURATION) {
-                    duration = RandomUtil.generateRandomBetween(4000, 12000)
+                    duration = RandomUtil.generateRandomBetween(timeMin, timeMax)
                 }
                 val animation = TranslateAnimation(0f, deltaX.toFloat(), 0f, deltaY.toFloat())
                 animation.duration = duration.toLong()
@@ -169,22 +185,40 @@ class ZeroGravityAnimation {
 
                 var imageXPosition = 0f
                 var imageYPosition = 0f
-                val translateXAnimation = ObjectAnimator.ofFloat(scaledBitmap, "translationX", startingPoints[0].toFloat(), endPoints[0].toFloat())
-                val translateYAnimation = ObjectAnimator.ofFloat(scaledBitmap, "translationY", startingPoints[1].toFloat(), endPoints[1].toFloat())
+                val translateXAnimation = ObjectAnimator.ofFloat(
+                    scaledBitmap,
+                    "translationX",
+                    startingPoints[0].toFloat(),
+                    endPoints[0].toFloat()
+                )
+                val translateYAnimation = ObjectAnimator.ofFloat(
+                    scaledBitmap,
+                    "translationY",
+                    startingPoints[1].toFloat(),
+                    endPoints[1].toFloat()
+                )
                 val set = AnimatorSet()
                 set.duration = duration.toLong()
                 set.playTogether(translateXAnimation, translateYAnimation)
                 set.start()
 
-                translateXAnimation.addUpdateListener { animation -> imageXPosition = animation.animatedValue as Float }
+                translateXAnimation.addUpdateListener { animation ->
+                    imageXPosition = animation.animatedValue as Float
+                }
 
                 translateYAnimation.addUpdateListener { animation ->
                     imageYPosition = animation.animatedValue as Float
-                    positionGiftCallBack.onChangePosition(imageXPosition.toInt(), imageYPosition.toInt())
+                    positionGiftCallBack.onChangePosition(
+                        imageXPosition.toInt(),
+                        imageYPosition.toInt()
+                    )
                 }
             }
         } else {
-            Log.e(ZeroGravityAnimation::class.java.simpleName, "Count was not provided, animation was not started")
+            Log.e(
+                ZeroGravityAnimation::class.java.simpleName,
+                "Count was not provided, animation was not started"
+            )
         }
     }
 

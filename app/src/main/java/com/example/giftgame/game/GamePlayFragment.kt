@@ -45,9 +45,11 @@ class GamePlayFragment : Fragment(), SensorEventListener {
     private var magnetometer: Sensor? = null
     private var speed = 30f
     private var countDown = 30L
-
     private var mGravity: FloatArray? = null
     private var mGeomagnetic: FloatArray? = null
+    private var timeMin = 4000
+    private var timeMax = 12000
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -69,19 +71,19 @@ class GamePlayFragment : Fragment(), SensorEventListener {
         if (!isStartGame) {
             playAnimation()
             isStartGame = true
-            object : CountDownTimer(10000, 1000) {
+            object : CountDownTimer(20000, 1000) {
                 override fun onTick(millisUntilFinished: Long) {
                     binding.timer.text = (millisUntilFinished / 1000).toString()
                     countDown = millisUntilFinished / 1000
                 }
 
                 override fun onFinish() {
-                   activity?.let {
-                       Handler(it.mainLooper).postDelayed({
-                           mSensorManager.unregisterListener(this@GamePlayFragment)
-                           mHandler?.removeCallbacks(userMove)
-                       }, 7000)
-                   }
+                    activity?.let {
+                        Handler(it.mainLooper).postDelayed({
+                            mSensorManager.unregisterListener(this@GamePlayFragment)
+                            mHandler?.removeCallbacks(userMove)
+                        }, 7000)
+                    }
                 }
             }.start()
         }
@@ -89,15 +91,10 @@ class GamePlayFragment : Fragment(), SensorEventListener {
 
     private fun playAnimation() {
         if (!this.isDetached) {
-            val handler = Handler()
-            startMusic()
             handleRandomGift(Column.FIRST)
             handleRandomGift(Column.SECOND)
             handleRandomGift(Column.THIRD)
             handleRandomGift(Column.FOURTH)
-            handler.postDelayed({
-                stopMusic()
-            }, 1300)
         }
     }
 
@@ -141,9 +138,9 @@ class GamePlayFragment : Fragment(), SensorEventListener {
             withContext(Dispatchers.IO) {
                 delay(4000)
             }
-            if (countDown != 0L){
+            if (countDown != 0L) {
                 handleRandomGift(column)
-            }else{
+            } else {
                 activity?.let {
                     Handler(it.mainLooper).postDelayed({
                         (it as MainActivity).openOpenGiftFragment(point = point)
@@ -169,10 +166,12 @@ class GamePlayFragment : Fragment(), SensorEventListener {
             }
             )
             animation.play(
-                requireActivity(),
-                binding.container,
-                column,
-                object : PositionGiftCallBack {
+                timeMin = timeMin,
+                timeMax = timeMax,
+                activity = requireActivity(),
+                ottParent = binding.container,
+                column = column,
+                positionGiftCallBack = object : PositionGiftCallBack {
                     override fun onChangePosition(imageXPosition: Int, imageYPosition: Int) {
                         try {
                             val cornerBottomLeftOfGift =
@@ -199,6 +198,11 @@ class GamePlayFragment : Fragment(), SensorEventListener {
 
                             if (isStartGame && !isCollideSuccess) {
                                 if (isDetectCollideY && (isDetectCollideX || isDetectCollideX1)) {
+                                    CoroutineScope(Dispatchers.IO).launch {
+                                        startMusic()
+                                        delay(1000)
+                                        stopMusic()
+                                    }
                                     animation.hideAnimation()
                                     when (item) {
                                         is Item.Gift -> {
@@ -207,14 +211,13 @@ class GamePlayFragment : Fragment(), SensorEventListener {
 
                                         is Item.BOOM -> {
                                             point -= item.point
+                                            if (point <= 0) {
+                                                point = 0
+                                            }
                                         }
 
                                         is Item.FlashTime -> {
-
-                                        }
-
-                                        is Item.MultiGift -> {
-
+                                            flashTime()
                                         }
                                     }
                                     binding.txtPoint.text = point.toString()
@@ -228,6 +231,25 @@ class GamePlayFragment : Fragment(), SensorEventListener {
                 })
         } catch (e: Exception) {
             e.printStackTrace()
+        }
+    }
+
+    private fun flashTime() {
+        CoroutineScope(Dispatchers.Main).launch {
+            if (timeMin == 4000 && timeMax == 12000) {
+                timeMin -= 2000
+                timeMax -= 2000
+                object : CountDownTimer(5000, 1000) {
+                    override fun onTick(millisUntilFinished: Long) {
+
+                    }
+
+                    override fun onFinish() {
+                        timeMin = 4000
+                        timeMax = 12000
+                    }
+                }.start()
+            }
         }
     }
 

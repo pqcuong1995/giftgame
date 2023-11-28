@@ -37,32 +37,74 @@ class OpenGiftFragment : Fragment() {
         arguments?.let {
             point = it.getInt(POINT_KEY)
         }
+        when (point) {
+            in 0..100 -> {
+                binding.giftBox.setImageDrawable(
+                    ContextCompat.getDrawable(requireActivity(), R.drawable.open_box_blue_1)
+                )
+            }
+
+            in 100..200 -> {
+                binding.giftBox.setImageDrawable(
+                    ContextCompat.getDrawable(requireActivity(), R.drawable.open_box_green_1)
+                )
+            }
+
+            in 200..300 -> {
+                binding.giftBox.setImageDrawable(
+                    ContextCompat.getDrawable(requireActivity(), R.drawable.open_box_yellow_1)
+                )
+            }
+        }
 
         binding.giftBox.setOnClickListener {
             context?.let {
                 binding.giftBox.startAnimation(AnimationUtils.loadAnimation(it, R.anim.shake))
                 Handler(it.mainLooper).postDelayed({
                     binding.giftBox.clearAnimation()
-                    binding.giftBox.setImageDrawable(
-                        ContextCompat.getDrawable(
-                            it,
-                            R.drawable.openhaft1
-                        )
-                    )
+                    when (point) {
+                        in 0..100 -> {
+                            binding.giftBox.setImageDrawable(
+                                ContextCompat.getDrawable(requireActivity(), R.drawable.open_box_blue_2)
+                            )
+                        }
+
+                        in 100..200 -> {
+                            binding.giftBox.setImageDrawable(
+                                ContextCompat.getDrawable(requireActivity(), R.drawable.open_box_green_2)
+                            )
+                        }
+
+                        in 200..300 -> {
+                            binding.giftBox.setImageDrawable(
+                                ContextCompat.getDrawable(requireActivity(), R.drawable.open_box_yellow_2)
+                            )
+                        }
+                    }
                     Handler(it.mainLooper).postDelayed({
                         binding.giftBox.clearAnimation()
-                        binding.giftBox.setImageDrawable(
-                            ContextCompat.getDrawable(
-                                it,
-                                R.drawable.openfull1
-                            )
-                        )
+                        when (point) {
+                            in 0..100 -> {
+                                binding.giftBox.setImageDrawable(
+                                    ContextCompat.getDrawable(requireActivity(), R.drawable.open_box_blue_3)
+                                )
+                            }
+
+                            in 100..200 -> {
+                                binding.giftBox.setImageDrawable(
+                                    ContextCompat.getDrawable(requireActivity(), R.drawable.open_box_green_3)
+                                )
+                            }
+
+                            in 200..300 -> {
+                                binding.giftBox.setImageDrawable(
+                                    ContextCompat.getDrawable(requireActivity(), R.drawable.open_box_yellow_3)
+                                )
+                            }
+                        }
                         Handler(it.mainLooper).postDelayed({
                             binding.giftBox.setImageDrawable(
-                                ContextCompat.getDrawable(
-                                    it,
-                                    getGiftImage(point = point)
-                                )
+                                ContextCompat.getDrawable(it, getGiftImage(point = point))
                             )
                             binding.giftBox.startAnimation(
                                 AnimationUtils.loadAnimation(
