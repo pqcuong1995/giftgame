@@ -25,5 +25,8 @@ class RulesFragment : Fragment() {
         binding.btnPlay.setOnClickListener {
             (activity as MainActivity).openGamePlay()
         }
+        binding.btnBack.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
     }
 }

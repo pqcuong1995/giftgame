@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.giftgame.game.GamePlayFragment
 import com.example.giftgame.game.RulesFragment
 import com.example.giftgame.game.SplashFragment
-import com.example.giftgame.opengift.OpenGiftFragment
+import com.example.giftgame.game.OpenGiftFragment
 
 @Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity() {

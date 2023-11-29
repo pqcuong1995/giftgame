@@ -1,4 +1,4 @@
-package com.example.giftgame.opengift
+package com.example.giftgame.game
 
 import android.content.Intent
 import android.os.Bundle
@@ -130,10 +130,6 @@ class OpenGiftFragment : Fragment() {
     }
 
     private fun getGiftImage(point: Int): Int {
-        if (point <= 0) {
-            return R.drawable.boxnull
-        } else {
-            return R.drawable.table
-        }
+        return R.drawable.ic_voucher
     }
 }
