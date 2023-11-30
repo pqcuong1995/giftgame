@@ -1,4 +1,4 @@
-package com.example.giftgame.user
+package com.example.giftgame.common.user
 
 import android.view.MotionEvent
 import android.view.View

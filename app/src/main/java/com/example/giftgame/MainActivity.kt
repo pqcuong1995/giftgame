@@ -5,10 +5,11 @@ import android.os.Bundle
 import android.view.WindowInsets
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
-import com.example.giftgame.game.GamePlayFragment
-import com.example.giftgame.game.RulesFragment
-import com.example.giftgame.game.SplashFragment
-import com.example.giftgame.opengift.OpenGiftFragment
+import com.example.giftgame.ui.game.GamePlayFragment
+import com.example.giftgame.ui.game.RulesFragment
+import com.example.giftgame.ui.game.SplashFragment
+import com.example.giftgame.ui.opengift.OpenGiftFragment
+import com.example.giftgame.ui.userinfo.UserInfoFragment
 
 @Suppress("DEPRECATION")
 class MainActivity : AppCompatActivity() {
@@ -43,6 +44,13 @@ class MainActivity : AppCompatActivity() {
     fun openGamePlay() {
         supportFragmentManager.beginTransaction()
             .add(R.id.frameContainer, GamePlayFragment(), GamePlayFragment::class.java.name)
+            .addToBackStack(null)
+            .commit()
+    }
+
+    fun openUserInfoFragment() {
+        supportFragmentManager.beginTransaction()
+            .add(R.id.frameContainer, UserInfoFragment(), UserInfoFragment::class.java.name)
             .addToBackStack(null)
             .commit()
     }

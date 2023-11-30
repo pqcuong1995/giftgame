@@ -1,4 +1,4 @@
-package com.example.giftgame.gift
+package com.example.giftgame.common.gift
 
 //noinspection SuspiciousImport
 import android.R
