@@ -38,10 +38,10 @@ class OpenGiftFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.txtPoint.text = "My point is $point"
         arguments?.let {
             point = it.getInt(POINT_KEY)
         }
+        binding.txtPoint.text = "My point is $point"
         when (point) {
             in 0..100 -> {
                 binding.giftBox.setImageDrawable(
