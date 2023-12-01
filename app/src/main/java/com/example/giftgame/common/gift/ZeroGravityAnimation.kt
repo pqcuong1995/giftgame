@@ -1,4 +1,4 @@
-package com.example.giftgame.gift
+package com.example.giftgame.common.gift
 
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator

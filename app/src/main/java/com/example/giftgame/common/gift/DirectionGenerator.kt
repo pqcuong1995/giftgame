@@ -1,4 +1,4 @@
-package com.example.giftgame.gift
+package com.example.giftgame.common.gift
 
 import android.app.Activity
 import com.example.giftgame.data.Column
@@ -19,7 +19,12 @@ class DirectionGenerator {
             Direction.BOTTOM -> getRandomBottom(activity, column)
             Direction.TOP -> getRandomTop(activity, column)
             else -> {
-                val allDirections = arrayOf(Direction.LEFT, Direction.TOP, Direction.BOTTOM, Direction.RIGHT)
+                val allDirections = arrayOf(
+                    Direction.LEFT,
+                    Direction.TOP,
+                    Direction.BOTTOM,
+                    Direction.RIGHT
+                )
                 val index = Random().nextInt(allDirections.size)
                 getPointsInDirection(activity, allDirections[index], column)
             }
@@ -127,7 +132,12 @@ class DirectionGenerator {
      */
     val randomDirection: Direction
         get() {
-            val allDirections = arrayOf(Direction.LEFT, Direction.TOP, Direction.BOTTOM, Direction.RIGHT)
+            val allDirections = arrayOf(
+                Direction.LEFT,
+                Direction.TOP,
+                Direction.BOTTOM,
+                Direction.RIGHT
+            )
             val index = Random().nextInt(allDirections.size)
             return allDirections[index]
         }

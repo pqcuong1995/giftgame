@@ -1,4 +1,4 @@
-package com.example.giftgame.game
+package com.example.giftgame.ui.game
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -19,12 +19,12 @@ import android.view.animation.Animation.AnimationListener
 import androidx.fragment.app.Fragment
 import com.example.giftgame.MainActivity
 import com.example.giftgame.R
+import com.example.giftgame.common.gift.Direction
+import com.example.giftgame.common.gift.PositionGiftCallBack
+import com.example.giftgame.common.gift.ZeroGravityAnimation
 import com.example.giftgame.data.Column
 import com.example.giftgame.data.Item
 import com.example.giftgame.databinding.FragmentGamePlayBinding
-import com.example.giftgame.gift.Direction
-import com.example.giftgame.gift.PositionGiftCallBack
-import com.example.giftgame.gift.ZeroGravityAnimation
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -54,7 +54,7 @@ class GamePlayFragment : Fragment(), SensorEventListener {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentGamePlayBinding.inflate(layoutInflater)
         return binding.root
     }
@@ -71,7 +71,7 @@ class GamePlayFragment : Fragment(), SensorEventListener {
         if (!isStartGame) {
             playAnimation()
             isStartGame = true
-            object : CountDownTimer(20000, 1000) {
+            object : CountDownTimer(5000, 1000) {
                 override fun onTick(millisUntilFinished: Long) {
                     binding.timer.text = (millisUntilFinished / 1000).toString()
                     countDown = millisUntilFinished / 1000
@@ -314,8 +314,8 @@ class GamePlayFragment : Fragment(), SensorEventListener {
 
     private var mHandler: Handler? = null
     private val mInterval = 15
-    var isXCanPlus = false
-    var isXCanMinus = false
+    private var isXCanPlus = false
+    private var isXCanMinus = false
     var isRunning = false
     private var userMove: Runnable = object : Runnable {
         override fun run() {

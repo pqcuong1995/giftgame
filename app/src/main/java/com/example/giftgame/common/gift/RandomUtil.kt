@@ -1,4 +1,4 @@
-package com.example.giftgame.gift
+package com.example.giftgame.common.gift
 
 import java.util.Random
 
