@@ -21,7 +21,19 @@
             android:layout_height="match_parent"
             app:blurRadius="10dp"
             app:layout_collapseMode="parallax"
-            app:overlayColor="#33ED0A14" />
+            app:overlayColor="#1AED0A14" />
+
+        <TextView
+            android:id="@+id/txtPoint"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="48dp"
+            android:fontFamily="cursive"
+            android:textColor="#fcf9b5"
+            android:textSize="30sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/giftBox"
@@ -39,7 +51,7 @@
             android:layout_marginTop="16dp"
             android:fontFamily="cursive"
             android:text="Click to open"
-            android:textColor="@color/white"
+            android:textColor="#fcf9b5"
             android:textSize="36sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

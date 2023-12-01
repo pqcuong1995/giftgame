@@ -71,7 +71,7 @@ class GamePlayFragment : Fragment(), SensorEventListener {
         if (!isStartGame) {
             playAnimation()
             isStartGame = true
-            object : CountDownTimer(5000, 1000) {
+            object : CountDownTimer(10000, 1000) {
                 override fun onTick(millisUntilFinished: Long) {
                     binding.timer.text = (millisUntilFinished / 1000).toString()
                     countDown = millisUntilFinished / 1000
@@ -178,11 +178,11 @@ class GamePlayFragment : Fragment(), SensorEventListener {
                                 imageYPosition + convertDpToPixel(48f, requireActivity())
                             val cornerTopLeftOfUser = currentXOfUser
                             val cornerTopRightOfUser =
-                                currentXOfUser + convertDpToPixel(48f, requireActivity())
+                                currentXOfUser + convertDpToPixel(72f, requireActivity())
 
                             val isDetectCollideY =
                                 (cornerBottomLeftOfGift > currentYOfUser) && (cornerBottomLeftOfGift < currentYOfUser + convertDpToPixel(
-                                    48f,
+                                    72f,
                                     requireActivity()
                                 ))
                             val isDetectCollideX =
@@ -198,11 +198,6 @@ class GamePlayFragment : Fragment(), SensorEventListener {
 
                             if (isStartGame && !isCollideSuccess) {
                                 if (isDetectCollideY && (isDetectCollideX || isDetectCollideX1)) {
-                                    CoroutineScope(Dispatchers.IO).launch {
-                                        startMusic()
-                                        delay(1000)
-                                        stopMusic()
-                                    }
                                     animation.hideAnimation()
                                     when (item) {
                                         is Item.Gift -> {
@@ -258,6 +253,10 @@ class GamePlayFragment : Fragment(), SensorEventListener {
     }
 
     private fun startMusic() {
+        if (mPlayer != null) {
+            mPlayer?.stop()
+            mPlayer = null
+        }
         mPlayer = MediaPlayer.create(requireActivity(), R.raw.mucsic_game)
         mPlayer?.isLooping = true
         mPlayer?.start()
