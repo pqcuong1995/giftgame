@@ -41,24 +41,18 @@ class OpenGiftFragment : Fragment() {
         arguments?.let {
             point = it.getInt(POINT_KEY)
         }
-        binding.txtPoint.text = "My point is $point"
+        binding.txtPoint.text = "MY POINT IS: $point"
         when (point) {
-            in 0..100 -> {
-                binding.giftBox.setImageDrawable(
-                    ContextCompat.getDrawable(requireActivity(), R.drawable.open_box_blue_1)
-                )
+            in 0..150 -> {
+                setImage(R.drawable.open_box_blue_1)
             }
 
-            in 100..200 -> {
-                binding.giftBox.setImageDrawable(
-                    ContextCompat.getDrawable(requireActivity(), R.drawable.open_box_green_1)
-                )
+            in 150..300 -> {
+                setImage(R.drawable.open_box_green_1)
             }
 
-            in 200..300 -> {
-                binding.giftBox.setImageDrawable(
-                    ContextCompat.getDrawable(requireActivity(), R.drawable.open_box_yellow_1)
-                )
+            in 300..1000 -> {
+                setImage(R.drawable.open_box_yellow_1)
             }
         }
 
@@ -68,85 +62,76 @@ class OpenGiftFragment : Fragment() {
                 Handler(it.mainLooper).postDelayed({
                     binding.giftBox.clearAnimation()
                     when (point) {
-                        in 0..100 -> {
-                            binding.giftBox.setImageDrawable(
-                                ContextCompat.getDrawable(
-                                    requireActivity(),
-                                    R.drawable.open_box_blue_2
-                                )
-                            )
+                        in 0..150 -> {
+                            setImage(R.drawable.open_box_blue_2)
                         }
 
-                        in 100..200 -> {
-                            binding.giftBox.setImageDrawable(
-                                ContextCompat.getDrawable(
-                                    requireActivity(),
-                                    R.drawable.open_box_green_2
-                                )
-                            )
+                        in 150..300 -> {
+                            setImage(R.drawable.open_box_green_2)
                         }
 
-                        in 200..300 -> {
-                            binding.giftBox.setImageDrawable(
-                                ContextCompat.getDrawable(
-                                    requireActivity(),
-                                    R.drawable.open_box_yellow_2
-                                )
-                            )
+                        in 300..1000 -> {
+                            setImage(R.drawable.open_box_yellow_2)
                         }
                     }
                     Handler(it.mainLooper).postDelayed({
                         binding.giftBox.clearAnimation()
                         when (point) {
-                            in 0..100 -> {
-                                binding.giftBox.setImageDrawable(
-                                    ContextCompat.getDrawable(
-                                        requireActivity(),
-                                        R.drawable.open_box_blue_3
-                                    )
-                                )
+                            in 0..150 -> {
+                                setImage(R.drawable.open_box_blue_3)
                             }
 
-                            in 100..200 -> {
-                                binding.giftBox.setImageDrawable(
-                                    ContextCompat.getDrawable(
-                                        requireActivity(),
-                                        R.drawable.open_box_green_3
-                                    )
-                                )
+                            in 150..300 -> {
+                                setImage(R.drawable.open_box_green_3)
                             }
 
-                            in 200..300 -> {
-                                binding.giftBox.setImageDrawable(
-                                    ContextCompat.getDrawable(
-                                        requireActivity(),
-                                        R.drawable.open_box_yellow_3
-                                    )
-                                )
+                            in 300..1000 -> {
+                                setImage(R.drawable.open_box_yellow_3)
                             }
                         }
                         Handler(it.mainLooper).postDelayed({
-                            binding.giftBox.setImageDrawable(
+                            binding.imgReward.setImageDrawable(
                                 ContextCompat.getDrawable(it, getGiftImage(point = point))
                             )
-                            binding.giftBox.startAnimation(
-                                AnimationUtils.loadAnimation(
-                                    it,
-                                    R.anim.scale
-                                )
-                            )
                             binding.buttonClose.visibility = View.GONE
-                            createInputDialog()
                         }, 1000)
                     }, 1000)
                 }, 1000)
             }
         }
-
+        binding.btnSave.setOnClickListener {
+            createInputDialog()
+        }
     }
 
     private fun getGiftImage(point: Int): Int {
-        return R.drawable.ic_voucher
+        when (point) {
+            in 0..150 -> {
+                return R.drawable.ic_gift_voucher
+            }
+
+            in 150..300 -> {
+                return R.drawable.ic_chair
+            }
+
+            in 300..1000 -> {
+                return R.drawable.ic_tv
+            }
+        }
+        return R.drawable.ic_tv
+    }
+
+    private fun setImage(resource: Int) {
+        try {
+            binding.giftBox.setImageDrawable(
+                ContextCompat.getDrawable(
+                    requireActivity(),
+                    resource
+                )
+            )
+        } catch (e: java.lang.Exception) {
+            e.printStackTrace()
+        }
     }
 
     private fun createInputDialog() {
@@ -160,7 +145,7 @@ class OpenGiftFragment : Fragment() {
             val dialog = Dialog(it)
             dialog.setContentView(dialogBinding.root)
             dialog.show()
-            dialogBinding.submit.setOnClickListener {
+            dialogBinding.btnSubmit.setOnClickListener {
                 val name = dialogBinding.input.text.toString()
                 if (name.isEmpty()) {
                     Toast.makeText(context, "Please input your name!", Toast.LENGTH_SHORT).show()

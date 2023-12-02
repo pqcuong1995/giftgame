@@ -136,7 +136,7 @@ class GamePlayFragment : Fragment(), SensorEventListener {
 
         CoroutineScope(Dispatchers.Main).launch {
             withContext(Dispatchers.IO) {
-                delay(4000)
+                delay(5000)
             }
             if (countDown != 0L) {
                 handleRandomGift(column)

@@ -5,7 +5,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/imgBackground"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -16,74 +16,98 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.example.giftgame.custom.BlurryView
-            android:layout_width="match_parent"
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline1"
+            android:layout_width="1dp"
             android:layout_height="match_parent"
-            app:blurRadius="10dp"
-            app:layout_collapseMode="parallax"
-            app:overlayColor="#1AED0A14" />
-
-        <TextView
-            android:id="@+id/txtPoint"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginTop="48dp"
-            android:fontFamily="cursive"
-            android:textColor="#fcf9b5"
-            android:textSize="30sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.15" />
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/giftBox"
-            android:layout_width="250dp"
-            android:layout_height="250dp"
+            android:id="@+id/imgCorner"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="@drawable/background_corner"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/guideline"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/guideline1" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/buttonClose"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:fontFamily="cursive"
-            android:text="Click to open"
-            android:textColor="#fcf9b5"
-            android:textSize="36sp"
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_percent="0.85" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/imgCorner"
+            app:layout_constraintTop_toTopOf="@+id/imgCorner">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/txtPoint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:fontFamily="sans-serif"
+                android:text="MY POINT IS: 0"
+                android:textColor="#fcf9b5"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/imgReward"
+                android:layout_width="250dp"
+                android:layout_height="100dp"
+                android:layout_marginBottom="-32dp"
+                android:scaleType="fitCenter"
+                app:layout_constraintBottom_toTopOf="@+id/giftBox"
+                app:layout_constraintEnd_toEndOf="@+id/giftBox"
+                app:layout_constraintStart_toStartOf="@+id/giftBox" />
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/giftBox"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/buttonClose"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="sans-serif"
+                android:text="Click to open"
+                android:textColor="#fcf9b5"
+                android:textSize="20sp"
+                android:textStyle="italic"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/giftBox" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/btnSave"
+            android:layout_width="142dp"
+            android:layout_height="46dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_save"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/giftBox" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/restart"
-            android:layout_width="200dp"
-            android:layout_height="56dp"
-            android:layout_marginBottom="26dp"
-            android:fontFamily="cursive"
-            android:gravity="center"
-            android:text="Restart"
-            android:textColor="@color/white"
-            android:textSize="36sp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_person_gift_1"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_person_gift_2"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/guideline" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

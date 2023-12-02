@@ -36,22 +36,21 @@ class MainActivity : AppCompatActivity() {
 
     fun openRulesGame() {
         supportFragmentManager.beginTransaction()
-            .add(R.id.frameContainer, RulesFragment(), RulesFragment::class.java.name)
+            .replace(R.id.frameContainer, RulesFragment(), RulesFragment::class.java.name)
             .addToBackStack(null)
             .commit()
     }
 
     fun openGamePlay() {
         supportFragmentManager.beginTransaction()
-            .add(R.id.frameContainer, GamePlayFragment(), GamePlayFragment::class.java.name)
+            .replace(R.id.frameContainer, GamePlayFragment(), GamePlayFragment::class.java.name)
             .addToBackStack(null)
             .commit()
     }
 
     fun openUserInfoFragment() {
         supportFragmentManager.beginTransaction()
-            .add(R.id.frameContainer, UserInfoFragment(), UserInfoFragment::class.java.name)
-            .addToBackStack(null)
+            .replace(R.id.frameContainer, UserInfoFragment(), UserInfoFragment::class.java.name)
             .commit()
     }
 
@@ -61,8 +60,7 @@ class MainActivity : AppCompatActivity() {
         bundle.putInt(OpenGiftFragment.POINT_KEY, point)
         openGiftFragment.arguments = bundle
         supportFragmentManager.beginTransaction()
-            .add(R.id.frameContainer, openGiftFragment, openGiftFragment::class.java.name)
-            .addToBackStack(null)
+            .replace(R.id.frameContainer, openGiftFragment, openGiftFragment::class.java.name)
             .commit()
     }
 }
