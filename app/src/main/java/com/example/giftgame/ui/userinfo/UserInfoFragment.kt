@@ -29,7 +29,7 @@ class UserInfoFragment : Fragment(), UserInfoAdapter.IUserInfo {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.restart.setOnClickListener {
+        binding.btnRestart.setOnClickListener {
             activity?.let {
                 it.finish()
                 val openMainActivity = Intent(it, MainActivity::class.java)

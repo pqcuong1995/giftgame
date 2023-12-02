@@ -165,6 +165,7 @@ class OpenGiftFragment : Fragment() {
                 if (name.isEmpty()) {
                     Toast.makeText(context, "Please input your name!", Toast.LENGTH_SHORT).show()
                 } else {
+                    binding.giftBox.isClickable = false
                     val user = User(fullName = name, score = point)
                     LocalStorage.getInstance().saveUser(user)
                     (activity as MainActivity).openUserInfoFragment()
