@@ -71,9 +71,10 @@ class GamePlayFragment : Fragment(), SensorEventListener {
         if (!isStartGame) {
             playAnimation()
             isStartGame = true
-            object : CountDownTimer(10000, 1000) {
+            object : CountDownTimer(120000, 1000) {
+                @SuppressLint("SetTextI18n")
                 override fun onTick(millisUntilFinished: Long) {
-                    binding.timer.text = (millisUntilFinished / 1000).toString()
+                    binding.timer.text = (millisUntilFinished / 1000).toString() + "s"
                     countDown = millisUntilFinished / 1000
                 }
 
